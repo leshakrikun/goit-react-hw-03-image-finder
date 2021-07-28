@@ -6,6 +6,8 @@ import Searchbar from './components/Searchbar/searchbar'
 import ImageGallery from './components/ImageGallery/imageGallery'
 import ImageGalleryItem from './components/ImageGalleryItem/imageGalleryItem'
 import Loader from 'react-loader-spinner'
+import API from '../src/components/Fetch/fetch';
+import Button from './components/Button/button'
 
 
 const CustomLoader = () => (
@@ -17,94 +19,75 @@ const CustomLoader = () => (
   timeout={3000}
   />
 );
-let car='cat'
 
-const fetchPhoto = async () => {
-  return await axios.get(
-    `https://pixabay.com/api/?q=${car}&page=1&key=21938998-67fd96e5d4868b12a769f8729&image_type=photo&orientation=horizontal&per_page=12`
-  );
-};
-let value
+
 export default class App extends React.Component {
    
-  state = {photos: [], errors:  null, loading: true, search: "car"}
- 
+  state = {photos: [], errors:  null, loading: true, search: ''}
+
+  Status = {
+    IDLE: 'idle',
+    PENDING: 'pending',
+    RESOLVED: 'resolved',
+    REJECTED: 'rejected',
+  };
 
   handleSubmit = e => {
     e.preventDefault();
-    const form = e.target.value
-    console.log(2, form);
-    /* const result = this.state.contacts.find( ({ name }) => name === this.state.name ); */
-   /*  if(result){
-      alert(this.state.name + ` is already in contact`)
-    } else { */
-      this.setState((state) => { 
-       
-        return {
-          search:value
-        }
+    API.resetPage()
+    const form = e.target
+
+    API.FetchPhoto(this.state.search)
+      .then(photos => {
+        this.setState({
+          photos: photos.hits,
+          status: 'resolved',
+         /*  page: this.page +1 */
+        });
       })
-   /*  form.reset(); */
-  } 
+      .catch(error => this.setState({ error, status: 'rejected' }));
+      form.reset();
+      
+  };
+    
+  
 
 
   handleChange = (e) => {
-    return value = e.target.value  
+    this.setState({ search: e.target.value });
   }
-
-
-
-componentDidUpdate(){
-  console.log("this.search", this.search);
-  car = this.state.search
-  console.log("this.search", car);
   
-}
+  onClick = () => {
 
-
-
-  componentDidMount(){
- 
-    (async () => {
-      try {
-        const photo = await fetchPhoto();
-        console.log("photo",photo); 
-        this.setState({photos: photo.data.hits})
-    } catch (error) {
-       console.log("error",); 
-      
-    }
-  
-  })()
-}
+    API.FetchPhoto(this.state.search)
+    .then(photos => {
+      this.setState({
+        photos: photos.hits,
+        status: 'resolved',
+      });
+    })
+    .catch(error => this.setState({ error, status: 'rejected' })
+    
+    
+    
+    );
+    
+};
 
 render() {
-  const getPhoto = fetchPhoto();
+  /* const getPhoto = fetchPhoto(); */
   /* const {loading} = this.state */
-  console.log("getPhoto", this.getPhoto);
+ /*  console.log("getPhoto", this.getPhoto); */
   
     return (
      <>
     <Searchbar handleSubmit = {this.handleSubmit}  handleChange={this.handleChange} />
-{!this.state.search ? (<p>жду запрос</p> ) : (
     <ImageGallery>
     <ImageGalleryItem photos= {this.state.photos} />
-    </ImageGallery>)
+    </ImageGallery>
+    {(this.state.photo) && <Button onClick={this.onClick}/>}
+    
 
-    }
+    
     </>
   )}}
-
-
-
-
-
-
-
-
-
-
-
-
-
- /*  {loading ? (<CustomLoader />) :( */

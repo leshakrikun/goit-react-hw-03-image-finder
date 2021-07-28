@@ -2,11 +2,13 @@ import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import s from './button.module.css';
 
-function Button ({})  {
+export default  function Button ({onClick})  {
 
 return(
-window.scrollTo({
-    top: document.documentElement.scrollHeight,
-    behavior: 'smooth',
-  }))
+  
+  <button onClick={onClick} className={s.Button} id="more">
+  Load more
+</button>
+  
+  )
 }

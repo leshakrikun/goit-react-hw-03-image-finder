@@ -2,7 +2,7 @@ import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import s from './imageGalleryItem.module.css';
 
-export default function ImageGalleryItem ({photos})  {
+export default function ImageGalleryItem ({photos, state})  {
 return(
 <>
 
