@@ -1,5 +1,4 @@
 import React from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import s from './searchbar.module.css';
 
 function Searchbar ({handleSubmit,  handleChange, /* searchValue */ })  {

@@ -7,6 +7,7 @@ incrementPage()
       if (response.ok) {
         return response.json();
       }
+      console.log('no');
       return Promise.reject(new Error(`Нет покемона с именем ${search}`));
     });
     
@@ -19,7 +20,6 @@ incrementPage()
   };
   function incrementPage() {
     page += 1;
-    console.log('page', page);
   }
   
  function resetPage() {

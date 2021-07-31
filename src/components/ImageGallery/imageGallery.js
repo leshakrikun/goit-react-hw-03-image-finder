@@ -1,8 +1,7 @@
 import React from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import s from './imageGallery.module.css';
 
-export default function ImageGallery ({children})  {
+export default function ImageGallery ({children, modal, onClick})  {
 return(
 <ul className={s.imageGallery} >
  {children}
