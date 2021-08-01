@@ -9,8 +9,7 @@ return(
 <li className={s.imageGalleryItem} key={state.id}  onClick={onClick}  >
   <img src={state.webformatURL} lowsrc={state.largeImageURL}  alt={state.tags} className={s.imageGalleryItemImage}/>
 </li>
-))
-}
+))}
 </>
 )}
 

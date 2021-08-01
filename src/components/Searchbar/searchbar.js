@@ -1,7 +1,7 @@
 import React from 'react';
 import s from './searchbar.module.css';
 
-function Searchbar ({handleSubmit,  handleChange, /* searchValue */ })  {
+function Searchbar ({handleSubmit,  handleChange})  {
     return(
         <header className={s.searchbar}>
   <form onSubmit={handleSubmit} className={s.searchForm}>
@@ -12,10 +12,6 @@ function Searchbar ({handleSubmit,  handleChange, /* searchValue */ })  {
       className={s.searchFormInput}
       type="text"
       onChange={handleChange} 
-      /* value={searchValue} */
-      
-      /* autocomplete="off" */
-      /* autofocus */
       placeholder="Search images and photos"
     />
   </form>

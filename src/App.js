@@ -1,7 +1,5 @@
-
 import React from 'react';
 import './App.css'
-import axios from 'axios';
 import Searchbar from './components/Searchbar/searchbar'
 import ImageGallery from './components/ImageGallery/imageGallery'
 import ImageGalleryItem from './components/ImageGalleryItem/imageGalleryItem'
@@ -11,23 +9,10 @@ import Button from './components/Button/button'
 import Modal from './components/Modal/modal'
 
 
-
-const CustomLoader = () => (
-  <Loader
-  type="Grid"
-  color="#00BFFF"
-  height={100}
-  width={100}
-  timeout={3000}
-  />
-);
-
-
 export default class App extends React.Component {
    
-  state = {photos: [], errors:  null, imageStatus:'', loading: true, search: '', showModal: false, largeImage:''}
+  state = {photos: [], errors:  null, loading: false, search: '', showModal: false, largeImage:''}
 
-  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  componentDidMount () {
     window.addEventListener('keydown', this.handleKeyDown);
     window.addEventListener('click', this.handleMouseClick);
@@ -43,7 +28,7 @@ handleKeyDown = (e) => {
    this.toggleModal();
   }
 }
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 handleMouseClick = (e) => {
   if (this.state.showModal && e.target.tagName==='DIV') {
     this.toggleModal();
@@ -59,37 +44,44 @@ handleMouseClick = (e) => {
   handleSubmit = e => {
     e.preventDefault();
     API.resetPage()
+    this.setState({loading:true})
     const form = e.target
 
     API.FetchPhoto(this.state.search)
       .then(photos => {
         this.setState({
           photos: photos.hits,
+          loading:false
         });
       })
-      .catch(error => this.setState({ error}));
+      .catch(error => this.setState({
+         errors: 'Повторите запрос',
+         loading:false
+        }));
       form.reset();
   };
     
-  
-
-
-  handleChange = (e) => {
+   handleChange = (e) => {
     this.setState({ search: e.target.value });
   }
 
-  onClick = () => {
+  onMoreClick = () => {
     API.FetchPhoto(this.state.search)
     .then(photos => {
       this.setState({
-        photos: photos.hits,
-       
+        photos: [...this.state.photos, ...photos.hits],
       });
     })
-    .catch(error => this.setState({ error })
-
-    ); 
+    .catch(errors => this.setState({ errors: 'Повторите запрос', loading:false })
+    )
+    .finally(() => {
+        window.scrollTo({
+          top: document.documentElement.scrollHeight,
+          behavior: "smooth",
+        });
+      })
 };
+
 
 handleOpenModal = e => {
   if (e.currentTarget.tagName === 'LI') {
@@ -101,22 +93,26 @@ handleOpenModal = e => {
 };
 
 render() {
-  const { showModal } = this.state;
-  
+  const { showModal, photos, loading, errors } = this.state;
     return (
     <>
     {showModal &&  (
-          <Modal onChange={this.handleKeyDown} state={this.state}>
-            {/* {imageStatus === "loading" && <Loader />} */}
-            {/* <img src={largeImage} alt="tags" onLoad={this.onImageLoaded} /> */}
-          </Modal>
+          <Modal onChange={this.handleKeyDown} state={this.state} />
         )}
     <Searchbar handleSubmit = {this.handleSubmit}  handleChange={this.handleChange} />
+    {loading && <Loader 
+        type="Puff"
+        color="#00BFFF"
+        height={100}
+        width={100}
+        timeout={3000} className='loader'>
+        </Loader>}
     <div className='container'>
+    {errors && <h2>Ошибка запроса</h2>}
     <ImageGallery>
-    <ImageGalleryItem photos= {this.state.photos} onClick={this.handleOpenModal}/>
+    <ImageGalleryItem photos= {photos} onClick={this.handleOpenModal}/>
     </ImageGallery>
-    {(this.state.photos[1]) && <Button onClick={this.onClick}/>}
+    {(photos.length!==0 && photos.length %12===0) && <Button onClick={this.onMoreClick}/>}
     </div>
     </>
   )}}

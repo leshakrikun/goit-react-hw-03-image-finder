@@ -1,4 +1,4 @@
-const key = '21938998-67fd96e5d4868b12a769f8729'
+const key = '21938998-67fd96e5d4868b12a769f8729';
 let page = 0
 function FetchPhoto(search) {
   
@@ -7,10 +7,7 @@ incrementPage()
       if (response.ok) {
         return response.json();
       }
-      console.log('no');
-      return Promise.reject(new Error(`Нет покемона с именем ${search}`));
     });
-    
   }
   
   const api = {

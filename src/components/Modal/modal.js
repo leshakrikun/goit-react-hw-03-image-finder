@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {createPortal} from 'react-dom'
 import s from './modal.module.css';
 
@@ -14,7 +14,6 @@ export default  function Modal ({onChange, state})  {
               <img src={largeImage} alt={tags}  />
             </div>
             </div>, modalRoot)
-      
       )
     }
 
